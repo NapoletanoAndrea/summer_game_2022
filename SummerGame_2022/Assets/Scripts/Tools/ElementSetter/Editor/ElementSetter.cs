@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class ElementSetter : EditorWindow
@@ -11,6 +12,7 @@ public class ElementSetter : EditorWindow
 	[SerializeField] private GameObject objectToInstantiate;
 
 	[SerializeField] private bool painting;
+	[SerializeField] private bool deleting;
 
 	private Grid grid;
 	private GameObject gameObjectPreview;
@@ -39,6 +41,9 @@ public class ElementSetter : EditorWindow
 
 	private void OnDisable() {
 		SceneView.duringSceneGui -= OnScene;
+		if (gameObjectPreview) {
+			DestroyImmediate(gameObjectPreview);
+		}
 	}
 
 	private void OnGUI() {
@@ -75,14 +80,20 @@ public class ElementSetter : EditorWindow
 
 		var paintButtonY = previewY * 1.2f;
 		var paintButtonRect = new Rect(0, paintButtonY, w, h);
+		
 		SerializedProperty paintingProperty = thisObject.FindProperty("painting");
 		bool paintingReference = paintingProperty.boolValue;
+		
+		SerializedProperty deletingProperty = thisObject.FindProperty("deleting");
+		bool deletingReference = deletingProperty.boolValue;
+		
 		if (!objectToInstantiateReference) {
 			paintingProperty.boolValue = false;
 		}
 		if (!paintingReference) {
 			if (GUI.Button(paintButtonRect, "Paint")) {
 				paintingProperty.boolValue = true;
+				deletingProperty.boolValue = false;
 			}
 		}
 		else {
@@ -94,6 +105,74 @@ public class ElementSetter : EditorWindow
 				paintingProperty.boolValue = false;
 			}
 		}
+
+		var delButtonY = paintButtonY + h;
+		var delButtonRect = new Rect(0, delButtonY, w, h);
+		
+		if (!deletingReference) {
+			if (GUI.Button(delButtonRect, "Delete")) {
+				paintingProperty.boolValue = false;
+				deletingProperty.boolValue = true;
+			}
+		}
+		else {
+			paintingTextStyle = new GUIStyle(GUI.skin.button)
+			{
+				fontStyle = FontStyle.Italic
+			};
+			if (GUI.Button(delButtonRect, "Deleting...", paintingTextStyle)) {
+				deletingProperty.boolValue = false;
+			}
+		}
+
+		float selectedLabelY = previewY + position.height / 5;
+		var selectedLabelRect = new Rect(0, selectedLabelY, w, h);
+
+		bool hasActiveGameObject = false;
+		
+		if (Selection.activeGameObject && Selection.activeGameObject.GetComponent<SpriteRenderer>()) {
+			GUI.Label(selectedLabelRect, "Selected GameObject: " + Selection.activeGameObject.name);
+			hasActiveGameObject = true;
+		}
+		else {
+			GUI.Label(selectedLabelRect, "No valid GameObject has been selected!");
+		}
+
+		float buttonW = 60;
+		float buttonH = 40;
+
+		float upAndDownX = position.width / 4;
+		float leftX = upAndDownX - 30;
+		float rightX = upAndDownX + 30;
+
+		float upY = selectedLabelY + position.height / 10;
+		float leftAndRightY = upY + buttonH + 10;
+		float downY = leftAndRightY + buttonH + 10;
+
+		var upRect = new Rect(upAndDownX, upY, buttonW, buttonH);
+		var downRect = new Rect(upAndDownX, downY, buttonW, buttonH);
+		var leftRect = new Rect(leftX, leftAndRightY, buttonW, buttonH);
+		var rightRect = new Rect(rightX, leftAndRightY, buttonW, buttonH);
+
+		Transform activeGameObjectTransform = null;
+		if (hasActiveGameObject) {
+			activeGameObjectTransform = Selection.activeGameObject.transform;
+		}
+		if (GUI.Button(upRect, "Up") && hasActiveGameObject) {
+			activeGameObjectTransform.position += Vector3.up * grid.cellSize.y;
+			//EditorSceneManager.MarkSceneDirty;
+		}
+		if (GUI.Button(downRect, "Down") && hasActiveGameObject) {
+			activeGameObjectTransform.position += Vector3.down * grid.cellSize.y;
+		}
+		if (GUI.Button(leftRect, "Left") && hasActiveGameObject) {
+			activeGameObjectTransform.position += Vector3.left * grid.cellSize.x;
+		}
+		if (GUI.Button(rightRect, "Right") && hasActiveGameObject) {
+			activeGameObjectTransform.position += Vector3.right * grid.cellSize.x;
+		}
+		
+		thisObject.ApplyModifiedProperties();
 	}
 	
 	private void DrawSprite(Rect rect, Sprite sprite) {
@@ -110,28 +189,68 @@ public class ElementSetter : EditorWindow
 		
 		float halfCellSizeX = grid.cellSize.x / 2;
 		float halfCellSizeY = grid.cellSize.y / 2;
-		
-		float tileX = Mathf.Round(mousePos.x);
-		tileX += tileX >= mousePos.x ? -halfCellSizeX : halfCellSizeX;
 
-		float tileY = Mathf.Round(mousePos.y);
-		tileY += tileY >= mousePos.y ? -halfCellSizeY : halfCellSizeY;
-	}
-	
-	private int GCF(int a, int b)
-	{
-		while (b != 0)
-		{
-			int temp = b;
-			b = a % b;
-			a = temp;
+		float tileX = SnapNumber(mousePos.x, halfCellSizeX);
+		float tileY = SnapNumber(mousePos.y, halfCellSizeY);
+		Vector2 pos = new Vector2(tileX, tileY);
+
+		if (painting) {
+			if (!objectToInstantiate) {
+				return;
+			}
+		
+			if (!gameObjectPreview) {
+				InstantiatePreview(pos);
+			}
+			else if (gameObjectPreview.transform.position != (Vector3) pos) {
+				DestroyImmediate(gameObjectPreview);
+				gameObjectPreview = null;
+				InstantiatePreview(pos);
+			}
+
+			if (e.type == EventType.MouseDown && e.button == 1) {
+				InstantiateObject(pos);
+			}
 		}
-		return a;
+		else if (deleting) {
+			if (e.type == EventType.MouseDown && e.button == 1) {
+				var toDeleteArray = FindObjectsOfType<SpriteRenderer>();
+				foreach (var toDelete in toDeleteArray) {
+					if (toDelete.transform.position == (Vector3) pos) {
+						DestroyImmediate(toDelete.gameObject);
+						break;
+					}
+				}
+			}
+		}
 	}
-	
-	private int LCM(int a, int b)
-	{
-		return (a / GCF(a, b)) * b;
+
+	private float SnapNumber(float x, float halfCellSize) {
+		float mulValue = x / halfCellSize;
+		mulValue = Mathf.Floor(mulValue);
+		if (mulValue % 2 == 0) {
+			mulValue++;
+		}
+		return halfCellSize * mulValue;
+	}
+
+	private void InstantiatePreview(Vector3 pos) {
+		gameObjectPreview = Instantiate(objectToInstantiate, pos, Quaternion.identity);
+		if (parentObject) {
+			gameObjectPreview.transform.parent = parentObject.transform;
+		}
+		var spriteRenderer = gameObjectPreview.GetComponent<SpriteRenderer>();
+		var color = spriteRenderer.color;
+		color.a = .2f;
+		spriteRenderer.color = color;
+	}
+
+	private void InstantiateObject(Vector3 pos) {
+		selectedGameObject = Instantiate(objectToInstantiate, pos, Quaternion.identity);
+		if (parentObject) {
+			selectedGameObject.transform.parent = parentObject.transform;
+		}
+		Selection.activeGameObject = selectedGameObject;
 	}
 
 	private Vector3 SceneToWorldPoint(Vector3 scenePoint, SceneView scene) {
