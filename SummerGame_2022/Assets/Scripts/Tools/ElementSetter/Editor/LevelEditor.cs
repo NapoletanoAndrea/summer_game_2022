@@ -1,11 +1,13 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class ElementSetter : EditorWindow
+public class LevelEditor : EditorWindow
 {
 	private SerializedObject thisObject;
 	private GUIStyle textStyle;
+	private GUIStyle centeredTextStyle;
 	private GUIStyle paintingTextStyle;
 
 	[SerializeField] private GameObject parentObject;
@@ -18,16 +20,30 @@ public class ElementSetter : EditorWindow
 	private GameObject gameObjectPreview;
 	private GameObject selectedGameObject;
 
-	[MenuItem("Custom Tools/Element Setter")]
+	[MenuItem("Custom Tools/Level Editor")]
 	public static void ShowWindow() {
-		var window = GetWindow<ElementSetter>();
+		var window = GetWindow<LevelEditor>(false, "Level Editor");
 		window.Show();
+	}
+
+	private void Init() {
+		grid = FindObjectOfType<Grid>();
 	}
 
 	private void OnEnable() {
 		thisObject = new SerializedObject(this);
 		SceneView.duringSceneGui += OnScene;
-		grid = FindObjectOfType<Grid>();
+
+		Init();
+
+		centeredTextStyle = new GUIStyle
+		{
+			alignment = TextAnchor.MiddleCenter,
+			normal = new GUIStyleState
+			{
+				textColor = Color.white
+			}
+		};
 		
 		textStyle = new GUIStyle
 		{
@@ -45,8 +61,29 @@ public class ElementSetter : EditorWindow
 			DestroyImmediate(gameObjectPreview);
 		}
 	}
+	
+	private void OnInspectorUpdate() {
+		if (gameObjectPreview) {
+			if (mouseOverWindow) {
+				if (mouseOverWindow.GetType() != typeof(SceneView)) {
+					DestroyImmediate(gameObjectPreview);
+				}
+			}
+			else {
+				DestroyImmediate(gameObjectPreview);
+			}
+		}
+	}
 
 	private void OnGUI() {
+		if (!grid) {
+			Init();
+			if (!grid) {
+				GUI.Label(new Rect(0, 0, position.width, position.height), "No tilemap grid could be found!", centeredTextStyle);
+				return;
+			}	
+		}
+		
 		float w = position.width / 2;
 		float h = 20;
 
@@ -130,7 +167,7 @@ public class ElementSetter : EditorWindow
 
 		bool hasActiveGameObject = false;
 		
-		if (Selection.activeGameObject && Selection.activeGameObject.GetComponent<SpriteRenderer>()) {
+		if (Selection.activeGameObject) {
 			GUI.Label(selectedLabelRect, "Selected GameObject: " + Selection.activeGameObject.name);
 			hasActiveGameObject = true;
 		}
@@ -160,16 +197,19 @@ public class ElementSetter : EditorWindow
 		}
 		if (GUI.Button(upRect, "Up") && hasActiveGameObject) {
 			activeGameObjectTransform.position += Vector3.up * grid.cellSize.y;
-			//EditorSceneManager.MarkSceneDirty;
+			EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
 		}
 		if (GUI.Button(downRect, "Down") && hasActiveGameObject) {
 			activeGameObjectTransform.position += Vector3.down * grid.cellSize.y;
+			EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
 		}
 		if (GUI.Button(leftRect, "Left") && hasActiveGameObject) {
 			activeGameObjectTransform.position += Vector3.left * grid.cellSize.x;
+			EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
 		}
 		if (GUI.Button(rightRect, "Right") && hasActiveGameObject) {
 			activeGameObjectTransform.position += Vector3.right * grid.cellSize.x;
+			EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
 		}
 		
 		thisObject.ApplyModifiedProperties();
@@ -182,6 +222,10 @@ public class ElementSetter : EditorWindow
 	}
 
 	private void OnScene(SceneView scene) {
+		if (!grid) {
+			return;
+		}
+		
 		Event e = Event.current;
 		
 		Vector2 mousePos = e.mousePosition;
@@ -210,17 +254,27 @@ public class ElementSetter : EditorWindow
 
 			if (e.type == EventType.MouseDown && e.button == 1) {
 				InstantiateObject(pos);
+				EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
 			}
 		}
 		else if (deleting) {
+			if (gameObjectPreview) {
+				DestroyImmediate(gameObjectPreview);
+			}
 			if (e.type == EventType.MouseDown && e.button == 1) {
 				var toDeleteArray = FindObjectsOfType<SpriteRenderer>();
 				foreach (var toDelete in toDeleteArray) {
 					if (toDelete.transform.position == (Vector3) pos) {
 						DestroyImmediate(toDelete.gameObject);
+						EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
 						break;
 					}
 				}
+			}
+		}
+		else {
+			if (gameObjectPreview) {
+				DestroyImmediate(gameObjectPreview);
 			}
 		}
 	}
