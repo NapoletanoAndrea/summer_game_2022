@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerElement : MonoBehaviour {
+public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
     [SerializeField] private ElementType startingElement;
     [SerializeField, ReadOnly] private ElementType currentElement;
     [SerializeField] private bool changeElement;
@@ -35,10 +33,12 @@ public class PlayerElement : MonoBehaviour {
                 int elementNum = (int) currentElement;
                 elementNum++;
                 if (elementNum > 2) {
+                    SendMove();
                     currentElement = 0;
                 }
                 turnCount = 0;
             }
+            TurnManager.Instance.turnsLeftForMoveExecution = turnsToChangeElement - turnCount;
         }
     }
 
@@ -53,5 +53,18 @@ public class PlayerElement : MonoBehaviour {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
+    }
+
+    public void SendMove() {
+        MoveData move = new MoveData(
+            currentElement,
+            this,
+            GridUtils.GetCrossPattern(transform.position)
+        );
+        GridUtils.AttackPosition(move);
+    }
+
+    public void ReceiveMove(MoveData move) {
+        // Start Battle
     }
 }

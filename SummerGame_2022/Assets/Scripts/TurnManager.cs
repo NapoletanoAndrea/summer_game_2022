@@ -13,6 +13,7 @@ public class TurnManager : MonoBehaviour {
     [SerializeField] private Turn startTurn;
     [SerializeField, ReadOnly] private Turn currentTurn;
     public Turn CurrentTurn => currentTurn;
+    [NonSerialized] public int turnsLeftForMoveExecution;
     
     public static TurnManager Instance;
 
