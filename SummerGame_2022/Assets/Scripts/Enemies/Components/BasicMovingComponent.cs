@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
-public class MovingEnemy : EnemyBase {
+[CreateAssetMenu(menuName = "Data/EnemyComponents/Moving/Basic Moving Component")]
+public class BasicMovingComponent : MovingComponent {
 	[SerializeField] private bool movesHorizontally;
 	[SerializeField] private bool movesVertically;
 	[SerializeField] private bool movesDiagonally;
@@ -11,18 +11,12 @@ public class MovingEnemy : EnemyBase {
 	[SerializeField] private float moveSeconds;
 	[SerializeField] private LayerMask obstacleMask;
 	
-	private Collider2D col;
-
 	private List<Vector2> possibleDirections = new();
-
-	private void Awake() {
-		col = GetComponent<Collider2D>();
-	}
-
+	
 	private void AddPossibleDirections(float distance, params Vector2[] directions) {
 		foreach (var direction in directions) {
 			direction.Normalize();
-			if (!Physics2D.Raycast(col.bounds.center, direction, distance, obstacleMask)) {
+			if (!Physics2D.Raycast(collider.bounds.center, direction, distance, obstacleMask)) {
 				possibleDirections.Add(direction * distance);
 			}
 		}
@@ -47,29 +41,19 @@ public class MovingEnemy : EnemyBase {
 		}
 		return possibleDirections;
 	}
-
+	
 	private Vector2 GetRandomDirection() {
 		return GetPossibleDirections()[Random.Range(0, possibleDirections.Count)];
 	}
-
-	private void Update() {
-		Vector2 startPos = col.bounds.center;
-		float num = 1;
-		Debug.DrawRay(startPos, Vector3.up / num);
-		Debug.DrawRay(startPos, Vector3.down / num);
-		Debug.DrawRay(startPos, Vector3.left / num);
-		Debug.DrawRay(startPos, Vector3.right / num);
-		Debug.DrawRay(startPos, Vector3.up + Vector3.right);
-	}
-
-	protected override void OnEnemyTurn() {
+	
+	public override void Move() {
 		if (slow) {
 			if (TurnManager.Instance.turnsLeftForMoveExecution == 1) {
-				StartCoroutine(MoveCoroutine(GetRandomDirection()));
+				enemyBase.StartCoroutine(MoveCoroutine(GetRandomDirection()));
 			}
 			return;
 		}
-		StartCoroutine(MoveCoroutine(GetRandomDirection()));
+		enemyBase.StartCoroutine(MoveCoroutine(GetRandomDirection()));
 	}
 
 	private IEnumerator MoveCoroutine(Vector2 vector, bool isLocation = false) {
