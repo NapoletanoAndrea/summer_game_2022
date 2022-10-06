@@ -47,6 +47,9 @@ TagManager:
   - name: Terrain
     uniqueID: 2741145029
     locked: 0
+  - name: OverTerrain
+    uniqueID: 3344746367
+    locked: 0
   - name: Obstacle
     uniqueID: 599963103
     locked: 0
