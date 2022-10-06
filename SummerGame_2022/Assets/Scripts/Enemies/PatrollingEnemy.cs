@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 
 public class PatrollingEnemy : MovingEnemy {
+    public Vector3 degrees;
     public List<PatrolTile> patrolTiles;
     private PatrolTile lastTile;
 
@@ -108,7 +108,33 @@ public class PatrollingEnemy : MovingEnemy {
         }
     }
 
-    private PatrolTile GetPatrolTile(Vector2 tilePosition) {
+    public void AddTileConnection(Vector2 tilePos1, Vector2 tilePos2) {
+        PatrolTile tile1 = GetPatrolTile(tilePos1);
+        PatrolTile tile2 = GetPatrolTile(tilePos2);
+        if (tile1 != null && tile2 != null) {
+            if (!tile1.adjacentTiles.Contains(tilePos2)) {
+                tile1.adjacentTiles.Add(tilePos2);
+            }
+            if (!tile2.adjacentTiles.Contains(tilePos1)) {
+                tile2.adjacentTiles.Add(tilePos1);
+            }
+        }
+    }
+
+    public void RemoveTileConnection(Vector2 tilePos1, Vector2 tilePos2) {
+        PatrolTile tile1 = GetPatrolTile(tilePos1);
+        PatrolTile tile2 = GetPatrolTile(tilePos2);
+        if (tile1 != null && tile2 != null) {
+            if (tile1.adjacentTiles.Contains(tilePos2)) {
+                tile1.adjacentTiles.Remove(tilePos2);
+            }
+            if (tile2.adjacentTiles.Contains(tilePos1)) {
+                tile2.adjacentTiles.Remove(tilePos1);
+            }
+        }
+    }
+
+    public PatrolTile GetPatrolTile(Vector2 tilePosition) {
         return patrolTiles.Find(t => t.tilePosition == tilePosition);
     }
 }
