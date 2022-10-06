@@ -234,8 +234,8 @@ public class LevelEditor : EditorWindow
 		float halfCellSizeX = grid.cellSize.x / 2;
 		float halfCellSizeY = grid.cellSize.y / 2;
 
-		float tileX = SnapNumber(mousePos.x, halfCellSizeX);
-		float tileY = SnapNumber(mousePos.y, halfCellSizeY);
+		float tileX = GridUtils.SnapNumber(mousePos.x, halfCellSizeX);
+		float tileY = GridUtils.SnapNumber(mousePos.y, halfCellSizeY);
 		Vector2 pos = new Vector2(tileX, tileY);
 
 		if (painting) {
@@ -277,15 +277,6 @@ public class LevelEditor : EditorWindow
 				DestroyImmediate(gameObjectPreview);
 			}
 		}
-	}
-
-	private float SnapNumber(float x, float halfCellSize) {
-		float mulValue = x / halfCellSize;
-		mulValue = Mathf.Floor(mulValue);
-		if (mulValue % 2 == 0) {
-			mulValue++;
-		}
-		return halfCellSize * mulValue;
 	}
 
 	private void InstantiatePreview(Vector3 pos) {

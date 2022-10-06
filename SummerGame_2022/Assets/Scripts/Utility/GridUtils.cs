@@ -1,7 +1,7 @@
 using UnityEngine;
 
-public static class GridUtils {
-    
+public static class GridUtils 
+{
     public static void AttackPosition(MoveData moveData) {
         float radius = GridManager.Instance.grid.cellSize.x / 2;
         radius *= .9f;
@@ -26,5 +26,14 @@ public static class GridUtils {
             center + Vector2.down * cellSize
         };
         return crossPattern;
+    }
+    
+    public static float SnapNumber(float x, float halfCellSize) {
+        float mulValue = x / halfCellSize;
+        mulValue = Mathf.Floor(mulValue);
+        if (mulValue % 2 == 0) {
+            mulValue++;
+        }
+        return halfCellSize * mulValue;
     }
 }
