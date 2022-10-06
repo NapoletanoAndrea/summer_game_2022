@@ -1,16 +1,27 @@
 using System;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using PatrolTile = PatrollingEnemy.PatrolTile;
 
 [CustomEditor(typeof(PatrollingEnemy))]
 public class PatrollingEnemyEditor : Editor {
 	private SerializedObject thisObject;
 	private bool settingPatrolTiles;
 	private bool removingPatrolTiles;
+	private bool editingTileConnections;
+	private bool editingConnectionsOrder;
+
+	private bool displayAllConnectionOrders;
 
 	private GUIStyle paintingTextStyle;
 
 	private Grid grid;
+
+	private int index;
+	private Vector2 tempPos;
+	private PatrolTile tempTile;
 
 	private void OnEnable() {
 		thisObject = new SerializedObject(this);
@@ -22,6 +33,13 @@ public class PatrollingEnemyEditor : Editor {
 		Tools.hidden = false;
 	}
 
+	private void DisableOtherSettings() {
+		settingPatrolTiles = false;
+		removingPatrolTiles = false;
+		editingTileConnections = false;
+		editingConnectionsOrder = false;
+	}
+
 	public override void OnInspectorGUI() {
 		base.OnInspectorGUI();
 		if (!grid) {
@@ -30,45 +48,66 @@ public class PatrollingEnemyEditor : Editor {
 
 		PatrollingEnemy enemy = (PatrollingEnemy) target;
 		
+		paintingTextStyle = new GUIStyle(GUI.skin.button)
+		{
+			fontStyle = FontStyle.Italic
+		};
+		
 		if (!settingPatrolTiles) {
 			if (GUILayout.Button("Set Patrol Tiles")) {
+				DisableOtherSettings();
 				settingPatrolTiles = true;
-				removingPatrolTiles = false;
-				thisObject.ApplyModifiedProperties();
 			}
 		}
 		else {
-			paintingTextStyle = new GUIStyle(GUI.skin.button)
-			{
-				fontStyle = FontStyle.Italic
-			};
 			if (GUILayout.Button("Setting Patrol Tiles...", paintingTextStyle)) {
 				settingPatrolTiles = false;
-				thisObject.ApplyModifiedProperties();
 			}
 		}
 
 		if (!removingPatrolTiles) {
 			if (GUILayout.Button("Remove Patrol Tiles")) {
+				DisableOtherSettings();
 				removingPatrolTiles = true;
-				settingPatrolTiles = false;
-				thisObject.ApplyModifiedProperties();
 			}
 		}
 		else {
-			paintingTextStyle = new GUIStyle(GUI.skin.button)
-			{
-				fontStyle = FontStyle.Italic
-			};
 			if (GUILayout.Button("Removing Patrol Tiles...", paintingTextStyle)) {
 				removingPatrolTiles = false;
-				thisObject.ApplyModifiedProperties();
 			}
 		}
 		
 		if (GUILayout.Button("Clear")) {
 			enemy.patrolTiles.Clear();
+			EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
 		}
+
+		if (!editingTileConnections) {
+			if (GUILayout.Button("Edit Tile Connections")) {
+				DisableOtherSettings();
+				editingTileConnections = true;
+				tempPos = Vector2.zero;
+			}
+		}
+		else {
+			if (GUILayout.Button("Editing Tile Connections...", paintingTextStyle)) {
+				editingTileConnections = false;
+			}
+		}
+
+		if (!editingConnectionsOrder) {
+			if (GUILayout.Button("Edit Connections Order")) {
+				DisableOtherSettings();
+				editingConnectionsOrder = true;
+			}
+		}
+		else {
+			if (GUILayout.Button("Editing Connections Order...", paintingTextStyle)) {
+				editingConnectionsOrder = false;
+			}
+		}
+
+		displayAllConnectionOrders = EditorGUILayout.Toggle("Display All Connection Orders", displayAllConnectionOrders);
 	}
 
 	private void OnScene(SceneView scene) {
@@ -84,6 +123,10 @@ public class PatrollingEnemyEditor : Editor {
 			faceColor.a = .2f;
 			Color outlineColor = Color.red;
 			Handles.DrawSolidRectangleWithOutline(new Rect(rectPos, cellSize), faceColor, outlineColor);
+			foreach (var adjPos in tile.adjacentTiles) {
+				Handles.color = Color.red;
+				Handles.DrawLine(tile.tilePosition, adjPos, 2.5f);
+			}
 		}
 		Tools.hidden = false;
 		Event e = Event.current;
@@ -93,6 +136,7 @@ public class PatrollingEnemyEditor : Editor {
 			if (e.type is EventType.MouseDrag or EventType.MouseDown && e.button == 0) {
 				Vector2 mousePos = GetMousePosition(scene);
 				enemy.AddPatrolTile(mousePos);
+				EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
 			}
 		}
 		if (removingPatrolTiles) {
@@ -101,8 +145,98 @@ public class PatrollingEnemyEditor : Editor {
 			if (e.type is EventType.MouseDrag or EventType.MouseDown && e.button == 0) {
 				Vector2 mousePos = GetMousePosition(scene);
 				enemy.RemovePatrolTile(mousePos);
+				EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
 			}
 		}
+		if (editingTileConnections) {
+			Tools.hidden = true;
+			HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+			if (e.button == 0) {
+				if (e.type == EventType.MouseDown) {
+					tempPos = GetMousePosition(scene);
+				}
+				if (tempPos != Vector2.zero) {
+					Handles.DrawLine(tempPos, SceneToWorldPoint(e.mousePosition, scene));
+				}
+				if (e.type == EventType.MouseUp) {
+					enemy.AddTileConnection(tempPos, GetMousePosition(scene));
+					tempPos = Vector2.zero;
+					EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+				}
+			}
+			if (e.button == 1) {
+				if (e.type == EventType.MouseDown) {
+					tempPos = GetMousePosition(scene);
+				}
+				if (e.type == EventType.MouseDrag) {
+					e.Use();
+				}
+				if (e.type == EventType.MouseUp) {
+					enemy.RemoveTileConnection(tempPos, GetMousePosition(scene));
+					tempPos = Vector2.zero;
+					EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+				}
+			}
+		}
+		if (displayAllConnectionOrders) {
+			foreach (var tile in enemy.patrolTiles) {
+				DrawConnectionOrders(tile);
+			}
+		}
+		if (editingConnectionsOrder) {
+			Tools.hidden = true;
+			HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+			if (e.type == EventType.MouseDown && e.button == 0) {
+				tempPos = GetMousePosition(scene);
+				tempTile = enemy.GetPatrolTile(tempPos);
+			}
+			if (tempTile != null && !displayAllConnectionOrders) {
+				DrawConnectionOrders(tempTile);
+			}
+			else {
+				Vector2 drawPoint = Vector2.zero;
+				if (e.type == EventType.MouseDown && e.button == 0) {
+					tempPos = GetMousePosition(scene);
+				}
+				if (e.type == EventType.MouseUp && e.button == 0) {
+					tempPos = Vector2.zero;
+				}
+			}
+		}
+	}
+
+	private void DrawConnectionOrders(PatrolTile tile) {
+		PatrollingEnemy enemy = (PatrollingEnemy) target;
+		Vector2 cellSize = grid.cellSize;
+		
+		int drawLines = tile.adjacentTiles.Count - 1;
+		foreach (var adjTilePos in tile.adjacentTiles) {
+			Vector2 direction = adjTilePos - tile.tilePosition;
+			for (int i = 0; i < drawLines; i++) {
+				float offset = i * cellSize.x * .05f;
+				Vector2 drawPoint = direction / 2 + tile.tilePosition - direction * offset;
+				float lenght = cellSize.x * .15f;
+				float thickness = 1.2f;
+				var degrees = enemy.degrees.z;
+						
+				var dir = direction.normalized * lenght;
+				dir = dir.Rotate(-degrees);
+				Vector2 endPoint1 = drawPoint - dir;
+				Handles.DrawLine(drawPoint, endPoint1, thickness);
+						
+				dir = direction.normalized * lenght;
+				dir = dir.Rotate(degrees);
+				Vector2 endPoint2 = drawPoint - dir;
+				Handles.DrawLine(drawPoint, endPoint2, thickness);
+			}
+			drawLines--;
+		}
+	}
+
+	private Vector2 GetDrawPoint(Vector2 currentTilePos, Vector2 adjTilePos) {
+		Vector2 direction = adjTilePos - currentTilePos;
+		Vector2 drawPoint = direction / 2 + tempTile.tilePosition - direction;
+		return drawPoint;
 	}
 
 	private Vector2 GetMousePosition(SceneView scene) {

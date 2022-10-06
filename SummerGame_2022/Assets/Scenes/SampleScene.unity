@@ -277,14 +277,91 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSeconds: 0.15
   slow: 0
+  degrees: {x: 0, y: 0, z: 57.4}
   patrolTiles:
   - tilePosition: {x: 2.5, y: -0.5}
     adjacentTiles:
     - {x: 3.5, y: -0.5}
+    - {x: 2.5, y: 0.5}
     index: 0
   - tilePosition: {x: 3.5, y: -0.5}
     adjacentTiles:
     - {x: 2.5, y: -0.5}
+    - {x: 4.5, y: -0.5}
+    index: 0
+  - tilePosition: {x: 4.5, y: -0.5}
+    adjacentTiles:
+    - {x: 3.5, y: -0.5}
+    - {x: 5.5, y: -0.5}
+    - {x: 4.5, y: 0.5}
+    index: 0
+  - tilePosition: {x: 5.5, y: -0.5}
+    adjacentTiles:
+    - {x: 4.5, y: -0.5}
+    - {x: 6.5, y: -0.5}
+    - {x: 5.5, y: 0.5}
+    - {x: 6.5, y: 0.5}
+    - {x: 4.5, y: 0.5}
+    index: 0
+  - tilePosition: {x: 6.5, y: -0.5}
+    adjacentTiles:
+    - {x: 5.5, y: -0.5}
+    - {x: 6.5, y: 0.5}
+    index: 0
+  - tilePosition: {x: 6.5, y: 0.5}
+    adjacentTiles:
+    - {x: 6.5, y: -0.5}
+    - {x: 5.5, y: 0.5}
+    - {x: 6.5, y: 1.5}
+    - {x: 7.5, y: 0.5}
+    - {x: 7.5, y: 1.5}
+    - {x: 5.5, y: -0.5}
+    index: 0
+  - tilePosition: {x: 5.5, y: 0.5}
+    adjacentTiles:
+    - {x: 6.5, y: 0.5}
+    - {x: 4.5, y: 0.5}
+    - {x: 5.5, y: 1.5}
+    - {x: 5.5, y: -0.5}
+    index: 0
+  - tilePosition: {x: 4.5, y: 0.5}
+    adjacentTiles:
+    - {x: 5.5, y: 0.5}
+    - {x: 3.5, y: 0.5}
+    - {x: 5.5, y: -0.5}
+    - {x: 4.5, y: -0.5}
+    index: 0
+  - tilePosition: {x: 3.5, y: 0.5}
+    adjacentTiles:
+    - {x: 4.5, y: 0.5}
+    - {x: 2.5, y: 0.5}
+    index: 0
+  - tilePosition: {x: 2.5, y: 0.5}
+    adjacentTiles:
+    - {x: 2.5, y: -0.5}
+    - {x: 3.5, y: 0.5}
+    index: 0
+  - tilePosition: {x: 5.5, y: 1.5}
+    adjacentTiles:
+    - {x: 5.5, y: 0.5}
+    - {x: 6.5, y: 1.5}
+    index: 0
+  - tilePosition: {x: 6.5, y: 1.5}
+    adjacentTiles:
+    - {x: 6.5, y: 0.5}
+    - {x: 5.5, y: 1.5}
+    - {x: 7.5, y: 1.5}
+    index: 0
+  - tilePosition: {x: 7.5, y: 0.5}
+    adjacentTiles:
+    - {x: 6.5, y: 0.5}
+    - {x: 7.5, y: 1.5}
+    index: 0
+  - tilePosition: {x: 7.5, y: 1.5}
+    adjacentTiles:
+    - {x: 7.5, y: 0.5}
+    - {x: 6.5, y: 1.5}
+    - {x: 6.5, y: 0.5}
     index: 0
 --- !u!1 &490142164
 GameObject:
@@ -573,7 +650,7 @@ GameObject:
   - component: {fileID: 923652587}
   - component: {fileID: 923652586}
   - component: {fileID: 923652585}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Obstacles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -605,7 +682,7 @@ TilemapCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
