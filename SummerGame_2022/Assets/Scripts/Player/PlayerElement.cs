@@ -9,9 +9,10 @@ public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
     [SerializeField] private bool changeElement;
     [SerializeField, ShowIf("changeElement")]
     private int turnsToChangeElement;
+    [SerializeField, ShowIf("changeElement")]
+    private int turnCount;
 
     private PlayerController playerController;
-    private int turnCount;
 
     private void Awake() {
         currentElement = startingElement;
@@ -29,9 +30,10 @@ public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
     private void ChangeElement() {
         if (changeElement) {
             turnCount++;
-            if (turnCount == turnsToChangeElement) {
+            if (turnCount >= turnsToChangeElement) {
                 int elementNum = (int) currentElement;
                 elementNum++;
+                currentElement = (ElementType) elementNum;
                 if (elementNum > 2) {
                     SendMove();
                     currentElement = 0;
@@ -56,7 +58,7 @@ public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
     }
 
     public void SendMove() {
-        MoveData move = new MoveData(
+        MoveData move = new (
             currentElement,
             this,
             GridUtils.GetCrossPattern(transform.position)

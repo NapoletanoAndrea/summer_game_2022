@@ -6,15 +6,13 @@ using Action = RewiredConsts.Action;
 
 public class PlayerController : MonoBehaviour {
 	[SerializeField] private float moveSeconds;
-
-	private Grid grid;
+	
 	private Player rewiredPlayer;
 	private bool canMove;
 
 	public event System.Action Moved;
 
 	private void Awake() {
-		grid = FindObjectOfType<Grid>();
 		rewiredPlayer = ReInput.players.GetPlayer(0);
 	}
 
@@ -42,20 +40,21 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private Vector2 GetDirection(int actionId) {
+		Vector2 cellSize = GridManager.Instance.grid.cellSize;
 		Vector2 vector = Vector2.zero;
 
 		switch (actionId) {
 			case Action.MoveLeft: 
-				vector = Vector2.left * grid.cellSize.x;
+				vector = Vector2.left * cellSize.x;
 				break;
 			case Action.MoveRight: 
-				vector = Vector2.right * grid.cellSize.x;
+				vector = Vector2.right * cellSize.x;
 				break;
 			case Action.MoveUp: 
-				vector = Vector2.up * grid.cellSize.y;
+				vector = Vector2.up * cellSize.y;
 				break;
 			case Action.MoveDown: 
-				vector = Vector2.down * grid.cellSize.y;
+				vector = Vector2.down * cellSize.y;
 				break;
 		}
 		return vector;
@@ -63,7 +62,13 @@ public class PlayerController : MonoBehaviour {
 
 	private void OnMove(InputActionEventData data) {
 		if (canMove) {
-			StartCoroutine(MoveCoroutine(GetDirection(data.actionId)));
+			Vector2 cellSize = GridManager.Instance.grid.cellSize;
+			Vector2 direction = GetDirection(data.actionId);
+			var result = Physics2D.OverlapCircle((Vector2) transform.position + direction, cellSize.x / 2 - .1f, GridManager.Instance.obstacleMask);
+			if (result) {
+				return;
+			}
+			StartCoroutine(MoveCoroutine(direction));
 		}
 	}
 

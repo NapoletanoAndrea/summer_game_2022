@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -22,6 +24,8 @@ public class PatrollingEnemyEditor : Editor {
 	private int index;
 	private Vector2 tempPos;
 	private PatrolTile tempTile;
+
+	private TileDrawPoint selectedDrawPoint;
 
 	private void OnEnable() {
 		thisObject = new SerializedObject(this);
@@ -178,7 +182,7 @@ public class PatrollingEnemyEditor : Editor {
 				}
 			}
 		}
-		if (displayAllConnectionOrders) {
+		if (displayAllConnectionOrders || editingConnectionsOrder) {
 			foreach (var tile in enemy.patrolTiles) {
 				DrawConnectionOrders(tile);
 			}
@@ -186,20 +190,31 @@ public class PatrollingEnemyEditor : Editor {
 		if (editingConnectionsOrder) {
 			Tools.hidden = true;
 			HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
-			if (e.type == EventType.MouseDown && e.button == 0) {
-				tempPos = GetMousePosition(scene);
-				tempTile = enemy.GetPatrolTile(tempPos);
-			}
-			if (tempTile != null && !displayAllConnectionOrders) {
-				DrawConnectionOrders(tempTile);
+			if (selectedDrawPoint == null) {
+				if (e.type == EventType.MouseDown && e.button == 0) {
+					List<TileDrawPoint> tileDrawPoints = new();
+					foreach (var tile in enemy.patrolTiles) {
+						tileDrawPoints.AddRange(GetDrawPoints(tile));
+					}
+					Vector2 mousePos = SceneToWorldPoint(e.mousePosition, scene);
+					if (tileDrawPoints.Count >= 2) {
+						tileDrawPoints = tileDrawPoints.OrderBy(t => (t.drawPoint - mousePos).sqrMagnitude).ToList();
+						if (Vector2.Distance(tileDrawPoints[0].drawPoint, mousePos) < cellSize.x / 2) {
+							selectedDrawPoint = tileDrawPoints[0];
+						}
+					}
+				}
 			}
 			else {
-				Vector2 drawPoint = Vector2.zero;
-				if (e.type == EventType.MouseDown && e.button == 0) {
-					tempPos = GetMousePosition(scene);
+				var tileDrawPoints = GetDrawPoints(selectedDrawPoint.tile);
+				Vector2 mousePos = SceneToWorldPoint(e.mousePosition, scene);
+				tileDrawPoints = tileDrawPoints.OrderBy(t => (t.drawPoint - mousePos).sqrMagnitude).ToList();
+				if (tileDrawPoints[0].drawPoint != selectedDrawPoint.drawPoint) {
+					Swap(tileDrawPoints[0], selectedDrawPoint);
+					EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
 				}
 				if (e.type == EventType.MouseUp && e.button == 0) {
-					tempPos = Vector2.zero;
+					selectedDrawPoint = null;
 				}
 			}
 		}
@@ -217,7 +232,7 @@ public class PatrollingEnemyEditor : Editor {
 				Vector2 drawPoint = direction / 2 + tile.tilePosition - direction * offset;
 				float lenght = cellSize.x * .15f;
 				float thickness = 1.2f;
-				var degrees = enemy.degrees.z;
+				var degrees = 57;
 						
 				var dir = direction.normalized * lenght;
 				dir = dir.Rotate(-degrees);
@@ -233,10 +248,38 @@ public class PatrollingEnemyEditor : Editor {
 		}
 	}
 
-	private Vector2 GetDrawPoint(Vector2 currentTilePos, Vector2 adjTilePos) {
-		Vector2 direction = adjTilePos - currentTilePos;
-		Vector2 drawPoint = direction / 2 + tempTile.tilePosition - direction;
-		return drawPoint;
+	private class TileDrawPoint {
+		public PatrolTile tile;
+		public Vector2 drawPoint;
+		public int adjTileIndex;
+	}
+	
+	private List<TileDrawPoint> GetDrawPoints(PatrolTile tile) {
+		List<TileDrawPoint> drawPoints = new();
+		if (tile.adjacentTiles.Count >= 2) {
+			int i = 0;
+			foreach (var adjTilePos in tile.adjacentTiles) {
+				Vector2 direction = adjTilePos - tile.tilePosition;
+				Vector2 drawPointPos = direction / 2 + tile.tilePosition - direction.normalized * .01f;
+				TileDrawPoint drawPoint = new()
+				{
+					tile = tile,
+					drawPoint = drawPointPos,
+					adjTileIndex = i
+				};
+				drawPoints.Add(drawPoint);
+				i++;
+			}
+		}
+		return drawPoints;
+	}
+
+	private void Swap(TileDrawPoint toSwap, TileDrawPoint selected) {
+		int swapIndex1 = selected.adjTileIndex;
+		int swapIndex2 = toSwap.adjTileIndex;
+		var adjTileList = selected.tile.adjacentTiles;
+		(adjTileList[swapIndex1], adjTileList[swapIndex2]) = (adjTileList[swapIndex2], adjTileList[swapIndex1]);
+		(selected.drawPoint, toSwap.drawPoint) = (toSwap.drawPoint, selected.drawPoint);
 	}
 
 	private Vector2 GetMousePosition(SceneView scene) {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PatrollingEnemy : MovingEnemy {
-    public Vector3 degrees;
     public List<PatrolTile> patrolTiles;
     private PatrolTile lastTile;
 
@@ -111,7 +110,7 @@ public class PatrollingEnemy : MovingEnemy {
     public void AddTileConnection(Vector2 tilePos1, Vector2 tilePos2) {
         PatrolTile tile1 = GetPatrolTile(tilePos1);
         PatrolTile tile2 = GetPatrolTile(tilePos2);
-        if (tile1 != null && tile2 != null) {
+        if (tile1 != null && tile2 != null && tile1 != tile2) {
             if (!tile1.adjacentTiles.Contains(tilePos2)) {
                 tile1.adjacentTiles.Add(tilePos2);
             }

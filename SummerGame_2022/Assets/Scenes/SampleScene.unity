@@ -277,12 +277,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSeconds: 0.15
   slow: 0
-  degrees: {x: 0, y: 0, z: 57.4}
   patrolTiles:
   - tilePosition: {x: 2.5, y: -0.5}
     adjacentTiles:
     - {x: 3.5, y: -0.5}
-    - {x: 2.5, y: 0.5}
     index: 0
   - tilePosition: {x: 3.5, y: -0.5}
     adjacentTiles:
@@ -293,75 +291,10 @@ MonoBehaviour:
     adjacentTiles:
     - {x: 3.5, y: -0.5}
     - {x: 5.5, y: -0.5}
-    - {x: 4.5, y: 0.5}
     index: 0
   - tilePosition: {x: 5.5, y: -0.5}
     adjacentTiles:
     - {x: 4.5, y: -0.5}
-    - {x: 6.5, y: -0.5}
-    - {x: 5.5, y: 0.5}
-    - {x: 6.5, y: 0.5}
-    - {x: 4.5, y: 0.5}
-    index: 0
-  - tilePosition: {x: 6.5, y: -0.5}
-    adjacentTiles:
-    - {x: 5.5, y: -0.5}
-    - {x: 6.5, y: 0.5}
-    index: 0
-  - tilePosition: {x: 6.5, y: 0.5}
-    adjacentTiles:
-    - {x: 6.5, y: -0.5}
-    - {x: 5.5, y: 0.5}
-    - {x: 6.5, y: 1.5}
-    - {x: 7.5, y: 0.5}
-    - {x: 7.5, y: 1.5}
-    - {x: 5.5, y: -0.5}
-    index: 0
-  - tilePosition: {x: 5.5, y: 0.5}
-    adjacentTiles:
-    - {x: 6.5, y: 0.5}
-    - {x: 4.5, y: 0.5}
-    - {x: 5.5, y: 1.5}
-    - {x: 5.5, y: -0.5}
-    index: 0
-  - tilePosition: {x: 4.5, y: 0.5}
-    adjacentTiles:
-    - {x: 5.5, y: 0.5}
-    - {x: 3.5, y: 0.5}
-    - {x: 5.5, y: -0.5}
-    - {x: 4.5, y: -0.5}
-    index: 0
-  - tilePosition: {x: 3.5, y: 0.5}
-    adjacentTiles:
-    - {x: 4.5, y: 0.5}
-    - {x: 2.5, y: 0.5}
-    index: 0
-  - tilePosition: {x: 2.5, y: 0.5}
-    adjacentTiles:
-    - {x: 2.5, y: -0.5}
-    - {x: 3.5, y: 0.5}
-    index: 0
-  - tilePosition: {x: 5.5, y: 1.5}
-    adjacentTiles:
-    - {x: 5.5, y: 0.5}
-    - {x: 6.5, y: 1.5}
-    index: 0
-  - tilePosition: {x: 6.5, y: 1.5}
-    adjacentTiles:
-    - {x: 6.5, y: 0.5}
-    - {x: 5.5, y: 1.5}
-    - {x: 7.5, y: 1.5}
-    index: 0
-  - tilePosition: {x: 7.5, y: 0.5}
-    adjacentTiles:
-    - {x: 6.5, y: 0.5}
-    - {x: 7.5, y: 1.5}
-    index: 0
-  - tilePosition: {x: 7.5, y: 1.5}
-    adjacentTiles:
-    - {x: 7.5, y: 0.5}
-    - {x: 6.5, y: 1.5}
-    - {x: 6.5, y: 0.5}
     index: 0
 --- !u!1 &490142164
 GameObject:
@@ -650,7 +583,7 @@ GameObject:
   - component: {fileID: 923652587}
   - component: {fileID: 923652586}
   - component: {fileID: 923652585}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Obstacles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -682,7 +615,7 @@ TilemapCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1711,7 +1644,7 @@ MonoBehaviour:
   grid: {fileID: 1849753571}
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 9
 --- !u!4 &1089057512
 Transform:
   m_ObjectHideFlags: 0
@@ -3849,7 +3782,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1904248606}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.48, y: -0.5, z: 0}
+  m_LocalPosition: {x: -3.5, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3872,6 +3805,7 @@ MonoBehaviour:
   currentElement: 0
   changeElement: 1
   turnsToChangeElement: 3
+  turnCount: 0
 --- !u!58 &1904248612
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3885,9 +3819,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.68}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.03
+  m_Radius: 0.3
 --- !u!50 &1904248613
 Rigidbody2D:
   serializedVersion: 4
