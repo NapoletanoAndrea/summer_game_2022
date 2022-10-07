@@ -1,7 +1,10 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class Door : MonoBehaviour, ITargetable {
 	public bool needsKey;
+	public bool needsElement;
+	[ShowIf("needsElement")]
 	public ElementType elementType;
 
 	public void ReceiveMove(MoveData move) {

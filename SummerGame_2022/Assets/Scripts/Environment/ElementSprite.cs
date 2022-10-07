@@ -15,17 +15,29 @@ public class ElementSprite : MonoBehaviour {
             if (!spriteRenderer) {
                 spriteRenderer = GetComponent<SpriteRenderer>();
             }
-            var spriteData = Utils.GetAllInstances<DataSpritesSO>();
-            if (spriteRenderer && spriteData.Length > 0) {
+
+            if (spriteRenderer) {
                 switch (associatedMono) {
                     case Door door:
-                        spriteRenderer.sprite = spriteData[0].elementSprites[door.elementType];
+                        SetSprite(door.elementType, door.needsElement);
                         break;
                     case Key key:
-                        spriteRenderer.sprite = spriteData[0].elementSprites[key.elementType];
+                        SetSprite(key.elementType, key.needsElement);
                         break;
                 }
             }
+        }
+    }
+
+    private void SetSprite(ElementType elementType, bool needsElement) {
+        if (needsElement) {
+            var spriteData = Utils.GetAllInstances<DataSpritesSO>();
+            if (spriteData.Length > 0) {
+                spriteRenderer.sprite = spriteData[0].elementSprites[elementType];
+            }
+        }
+        else {
+            spriteRenderer.sprite = null;
         }
     }
 }

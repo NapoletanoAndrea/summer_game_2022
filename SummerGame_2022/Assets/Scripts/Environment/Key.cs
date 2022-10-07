@@ -1,6 +1,9 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class Key : MonoBehaviour, ITargetable {
+	public bool needsElement;
+	[ShowIf("needsElement")]
 	public ElementType elementType;
 	
 	public void ReceiveMove(MoveData move) {
