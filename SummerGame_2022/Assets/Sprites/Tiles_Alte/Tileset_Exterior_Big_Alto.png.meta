@@ -69,7 +69,7 @@ TextureImporter:
     maxTextureSize: 16384
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -954,7 +954,6 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Tileset_Exterior_Big_Alto_32: -621123723
       Tileset_Exterior_Big_Alto_15: -356155831
       Tileset_Exterior_Big_Alto_36: 1853484002
       Tileset_Exterior_Big_Alto_17: -506964083
@@ -986,6 +985,7 @@ TextureImporter:
       Tileset_Exterior_Big_Alto_24: 915349034
       Tileset_Exterior_Big_Alto_7: -1844005138
       Tileset_Exterior_Big_Alto_34: -1735488611
+      Tileset_Exterior_Big_Alto_32: -621123723
       Tileset_Exterior_Big_Alto_26: -440079839
       Tileset_Exterior_Big_Alto_31: 1392933891
       Tileset_Exterior_Big_Alto_28: -1897720208

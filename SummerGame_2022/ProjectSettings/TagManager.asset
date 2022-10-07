@@ -50,3 +50,6 @@ TagManager:
   - name: Obstacle
     uniqueID: 599963103
     locked: 0
+  - name: Environment
+    uniqueID: 2784151817
+    locked: 0
