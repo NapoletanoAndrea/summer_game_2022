@@ -23,6 +23,9 @@ public class TurnManager : MonoBehaviour {
     private void Awake() {
         Instance = this;
         currentTurn = startTurn;
+        if (!playerController) {
+            playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        }
     }
 
     private void Start() {

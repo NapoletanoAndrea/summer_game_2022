@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class Key : MonoBehaviour, ITargetable {
-	[SerializeField] private ElementType elementType;
+	public ElementType elementType;
 	
 	public void ReceiveMove(MoveData move) {
 		var mono = move.sender as MonoBehaviour;

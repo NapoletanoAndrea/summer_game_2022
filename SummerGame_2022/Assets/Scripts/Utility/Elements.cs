@@ -10,7 +10,7 @@ public enum ElementType {
 
 public static class Elements
 {
-	public static int Compare(ElementType element1, ElementType element2) {
+	public static int Compare(this ElementType element1, ElementType element2) {
 		switch (element1) {
 			case ElementType.Rock:
 				switch (element2) {

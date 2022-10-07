@@ -1,8 +1,8 @@
 using UnityEngine;
 
 public class Door : MonoBehaviour, ITargetable {
-	[SerializeField] private bool needsKey;
-	[SerializeField] private ElementType elementType;
+	public bool needsKey;
+	public ElementType elementType;
 
 	public void ReceiveMove(MoveData move) {
 		var mono = move.sender as MonoBehaviour;

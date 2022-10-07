@@ -31,29 +31,16 @@ public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
         if (changeElement) {
             turnCount++;
             if (turnCount >= turnsToChangeElement) {
+                SendMove();
                 int elementNum = (int) currentElement;
                 elementNum++;
                 if (elementNum > 2) {
-                    SendMove();
                     currentElement = 0;
                 }
                 currentElement = (ElementType) elementNum;
                 turnCount = 0;
             }
             TurnManager.Instance.turnsLeftForMoveExecution = turnsToChangeElement - turnCount;
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D col) {
-        EnemyElement enemyElement = col.GetComponent<EnemyElement>();
-        if (enemyElement) {
-            int compareValue = Elements.Compare(currentElement, enemyElement.CurrentElement);
-            if (compareValue == 1) {
-                Destroy(enemyElement.gameObject);
-            }
-            if (compareValue == -1) {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            }
         }
     }
 

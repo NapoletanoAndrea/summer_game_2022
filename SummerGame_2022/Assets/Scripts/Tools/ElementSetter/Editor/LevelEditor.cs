@@ -291,7 +291,13 @@ public class LevelEditor : EditorWindow
 	}
 
 	private void InstantiateObject(Vector3 pos) {
-		selectedGameObject = Instantiate(objectToInstantiate, pos, Quaternion.identity);
+		if (PrefabUtility.IsPartOfAnyPrefab(objectToInstantiate)) {
+			selectedGameObject = (GameObject) PrefabUtility.InstantiatePrefab(objectToInstantiate);
+			selectedGameObject.transform.position = pos;
+		}
+		else {
+			selectedGameObject = Instantiate(objectToInstantiate, pos, Quaternion.identity);
+		}
 		if (parentObject) {
 			selectedGameObject.transform.parent = parentObject.transform;
 		}

@@ -31,7 +31,7 @@ public class PatrollingEnemy : MovingEnemy {
 
     protected override void OnEnemyTurn() {
         if (patrolTiles.Count < 2) {
-            Move(Vector2.zero);
+            Moved?.Invoke();
             return;
         }
         

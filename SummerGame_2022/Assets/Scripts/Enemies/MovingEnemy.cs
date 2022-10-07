@@ -8,10 +8,12 @@ public abstract class MovingEnemy : EnemyBase {
 	protected void Move(Vector2 direction) {
 		if (CanMove()) {
 			StartCoroutine(MoveCoroutine(direction));
+			return;
 		}
+		Moved?.Invoke();
 	}
 	
-	protected bool CanMove() {
+	private bool CanMove() {
 		if (slow) {
 			return TurnManager.Instance.turnsLeftForMoveExecution == 1;
 		}

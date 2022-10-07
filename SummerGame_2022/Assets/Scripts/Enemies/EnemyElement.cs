@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class EnemyElement : MonoBehaviour
+public class EnemyElement : MonoBehaviour, ITargetable
 {
     [SerializeField] private ElementType startingElement;
     [SerializeField, ReadOnly] private ElementType currentElement;
@@ -15,12 +13,14 @@ public class EnemyElement : MonoBehaviour
     [SerializeField] private int bestOf;
     
     private EnemyBase enemyBase;
+    private int health;
 
     public ElementType CurrentElement => currentElement;
 
     private void Awake() {
         currentElement = startingElement;
         enemyBase = GetComponent<EnemyBase>();
+        health = bestOf;
     }
 
     private void OnEnable() {
@@ -42,6 +42,28 @@ public class EnemyElement : MonoBehaviour
                 }
                 currentElement = (ElementType) elementNum;
                 turnCount = 0;
+            }
+        }
+    }
+
+    private void TakeDamage() {
+        health--;
+        if (health <= 0) {
+            gameObject.SetActive(false);
+        }
+    }
+
+    public void ReceiveMove(MoveData move) {
+        var mono = move.sender as MonoBehaviour;
+        if (mono != null && mono.gameObject.CompareTag("Player")) {
+            switch (currentElement.Compare(move.moveType)) {
+                case -1:
+                    TakeDamage();
+                    break;
+                case 0:
+                    break;
+                case 1:
+                    break;
             }
         }
     }

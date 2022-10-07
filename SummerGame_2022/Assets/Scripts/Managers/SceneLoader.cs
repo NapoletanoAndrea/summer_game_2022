@@ -20,6 +20,7 @@ public class SceneLoader : MonoBehaviour {
     private void Awake() {
         if (!Instance) {
             Instance = this;
+            transform.parent = null;
             DontDestroyOnLoad(this);
         }
         else {
