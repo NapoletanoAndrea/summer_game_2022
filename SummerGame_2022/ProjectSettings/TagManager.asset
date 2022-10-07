@@ -44,9 +44,12 @@ TagManager:
   - name: Background
     uniqueID: 3080996631
     locked: 0
-  - name: Terrain
+  - name: Level
     uniqueID: 2741145029
     locked: 0
-  - name: Obstacle
+  - name: Character
     uniqueID: 599963103
+    locked: 0
+  - name: Battle
+    uniqueID: 3210499557
     locked: 0
