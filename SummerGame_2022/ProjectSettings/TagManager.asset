@@ -50,6 +50,6 @@ TagManager:
   - name: Character
     uniqueID: 599963103
     locked: 0
-  - name: Battle
+  - name: Fight
     uniqueID: 3210499557
     locked: 0
