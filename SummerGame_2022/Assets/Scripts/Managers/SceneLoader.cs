@@ -62,6 +62,10 @@ public class SceneLoader : MonoBehaviour {
         StartCoroutine(FadeTo(0, 1, fadeSeconds, true));
     }
 
+    public void Reload() {
+        LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
     private IEnumerator FadeTo(float from, float to, float time, bool changeScene = false) {
         if (!blackScreenPrefab) {
             yield break;

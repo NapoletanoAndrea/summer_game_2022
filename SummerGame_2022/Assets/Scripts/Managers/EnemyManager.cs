@@ -5,8 +5,8 @@ using UnityEngine;
 public class EnemyManager : MonoBehaviour {
 	public static EnemyManager Instance;
 	
-	private List<EnemyBase> enemies = new();
-	private int movedCount;
+	private List<EnemyElement> enemies = new();
+	private int finishedCount;
 
 	public event Action FinishedEnemyTurn;
 
@@ -14,15 +14,17 @@ public class EnemyManager : MonoBehaviour {
 		Instance = this;
 	}
 
-	public void Subscribe(EnemyBase enemyBase) {
-		enemies.Add(enemyBase);
-		enemyBase.Moved += OnEnemyMoved;
+	public void Subscribe(EnemyElement enemyElement) {
+		enemies.Add(enemyElement);
+		enemyElement.FinishedTurn += OnEnemyFinishedTurn;
 	}
 
-	public void Unsubscribe(EnemyBase enemyBase) {
-		enemies.Remove(enemyBase);
-		enemyBase.Moved -= OnEnemyMoved;
+	public void Unsubscribe(EnemyElement enemyElement) {
+		Debug.Log("Uns");
+		enemies.Remove(enemyElement);
+		enemyElement.FinishedTurn -= OnEnemyFinishedTurn;
 		if (!AreThereEnemiesLeft() && TurnManager.Instance.CurrentTurn == Turn.EnemyTurn) {
+			Debug.Log("Finished");
 			FinishedEnemyTurn?.Invoke();
 		}
 	}
@@ -31,9 +33,9 @@ public class EnemyManager : MonoBehaviour {
 		return enemies.Count > 0;
 	}
 
-	private void OnEnemyMoved() {
-		movedCount++;
-		if (movedCount >= enemies.Count) {
+	private void OnEnemyFinishedTurn() {
+		finishedCount++;
+		if (finishedCount >= enemies.Count) {
 			FinishedEnemyTurn?.Invoke();
 		}
 	}

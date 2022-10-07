@@ -9,7 +9,7 @@ public class GridManager : MonoBehaviour {
     private void Awake() {
         Instance = this;
         if (!grid) {
-            grid = GetComponent<Grid>();
+            grid = FindObjectOfType<Grid>();
         }
     }
 }

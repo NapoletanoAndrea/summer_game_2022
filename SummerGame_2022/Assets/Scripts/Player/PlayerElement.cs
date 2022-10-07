@@ -1,7 +1,6 @@
-using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using Action = System.Action;
 
 public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
     [SerializeField] private ElementType startingElement;
@@ -13,6 +12,8 @@ public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
     private int turnCount;
 
     private PlayerController playerController;
+
+    public event Action FinishedTurn;
 
     private void Awake() {
         currentElement = startingElement;
@@ -35,12 +36,13 @@ public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
                 int elementNum = (int) currentElement;
                 elementNum++;
                 if (elementNum > 2) {
-                    currentElement = 0;
+                    elementNum = 0;
                 }
                 currentElement = (ElementType) elementNum;
                 turnCount = 0;
             }
             TurnManager.Instance.turnsLeftForMoveExecution = turnsToChangeElement - turnCount;
+            FinishedTurn?.Invoke();
         }
     }
 
@@ -54,6 +56,9 @@ public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
     }
 
     public void ReceiveMove(MoveData move) {
-        // Start Battle
+        var mono = move.sender as MonoBehaviour;
+        if (mono != null && mono.gameObject.CompareTag("Enemy")) {
+            BattleManager.Instance.StartBattle((EnemyElement) mono, currentElement, move.moveType);
+        }
     }
 }

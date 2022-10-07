@@ -8,9 +8,9 @@ public static class GridUtils
         foreach (var targetPosition in moveData.targetPositions) {
             var results = Physics2D.OverlapCircleAll(targetPosition, radius);
             foreach (var c in results) {
-                MonoBehaviour[] monos = c.GetComponents<MonoBehaviour>();
-                foreach (var mono in monos) {
-                    ((ITargetable) mono)?.ReceiveMove(moveData);
+                var targetables = c.GetComponents<ITargetable>();
+                foreach (var targetable in targetables) {
+                    targetable.ReceiveMove(moveData);
                 }
             }
         }

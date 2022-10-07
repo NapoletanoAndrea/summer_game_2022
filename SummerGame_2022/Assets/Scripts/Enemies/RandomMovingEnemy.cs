@@ -22,7 +22,7 @@ public class RandomMovingEnemy : MovingEnemy
 	private void AddPossibleDirections(float distance, params Vector2[] directions) {
 		foreach (var direction in directions) {
 			direction.Normalize();
-			if (!Physics2D.Raycast(col.bounds.center, direction, distance, GridManager.Instance.obstacleMask)) {
+			if (Physics2D.RaycastAll(col.bounds.center, direction, distance, GridManager.Instance.obstacleMask).Length <= 1) {
 				possibleDirections.Add(direction * distance);
 			}
 		}

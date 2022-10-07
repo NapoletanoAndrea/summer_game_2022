@@ -4,15 +4,17 @@ using UnityEngine;
 
 public enum Turn {
     PlayerTurn,
-    EnemyTurn
+    EnemyTurn,
+    InBattle
 }
 
 public class TurnManager : MonoBehaviour {
-    [SerializeField] private PlayerController playerController;
+    [SerializeField] private PlayerElement playerElement;
 
     [SerializeField] private Turn startTurn;
     [SerializeField, ReadOnly] private Turn currentTurn;
     public Turn CurrentTurn => currentTurn;
+    private Turn lastTurn;
     [NonSerialized] public int turnsLeftForMoveExecution;
     
     public static TurnManager Instance;
@@ -20,23 +22,29 @@ public class TurnManager : MonoBehaviour {
     public event Action PlayerTurn;
     public event Action EnemyTurn;
 
+    private event Action BattleFinished;
+
     private void Awake() {
         Instance = this;
         currentTurn = startTurn;
-        if (!playerController) {
-            playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        if (!playerElement) {
+            playerElement = GameObject.FindWithTag("Player").GetComponent<PlayerElement>();
         }
     }
 
     private void Start() {
-        playerController.Moved += OnPlayerMoved;
-        EnemyManager.Instance.FinishedEnemyTurn += OnEnemyMoved;
+        playerElement.FinishedTurn += OnPlayerFinishedTurn;
+        EnemyManager.Instance.FinishedEnemyTurn += OnEnemyFinishedTurn;
+        BattleManager.Instance.BattleStarted += OnBattleStarted;
+        BattleManager.Instance.BattleFinished += OnBattleFinished;
         Invoke(nameof(LateStart), .1f);
     }
 
     private void OnDisable() {
-        playerController.Moved -= OnPlayerMoved;
-        EnemyManager.Instance.FinishedEnemyTurn -= OnEnemyMoved;
+        playerElement.FinishedTurn -= OnPlayerFinishedTurn;
+        EnemyManager.Instance.FinishedEnemyTurn -= OnEnemyFinishedTurn;
+        BattleManager.Instance.BattleStarted -= OnBattleStarted;
+        BattleManager.Instance.BattleFinished -= OnBattleFinished;
     }
 
     private void LateStart() {
@@ -49,25 +57,45 @@ public class TurnManager : MonoBehaviour {
     }
 
     private void OnPlayerTurn() {
+        currentTurn = Turn.PlayerTurn;
         PlayerTurn?.Invoke();
     }
 
     private void OnEnemyTurn() {
+        currentTurn = Turn.EnemyTurn;
         EnemyTurn?.Invoke();
     }
 
-    private void OnPlayerMoved() {
-        currentTurn = Turn.EnemyTurn;
-        if (EnemyManager.Instance.AreThereEnemiesLeft()) {
-            OnEnemyTurn();
+    private void OnPlayerFinishedTurn() {
+        if (currentTurn == Turn.PlayerTurn) {
+            if (EnemyManager.Instance.AreThereEnemiesLeft()) {
+                OnEnemyTurn();
+            }
+            else {
+                OnPlayerTurn();
+            }
         }
         else {
-            OnPlayerTurn();
+            BattleFinished = OnPlayerTurn;
         }
     }
 
-    private void OnEnemyMoved() {
-        currentTurn = Turn.PlayerTurn;
-        OnPlayerTurn();
+    private void OnEnemyFinishedTurn() {
+        if (currentTurn == Turn.EnemyTurn) {
+            OnPlayerTurn();
+        }
+        else {
+            BattleFinished = OnEnemyTurn;
+        }
+    }
+
+    private void OnBattleStarted() {
+        lastTurn = currentTurn;
+        currentTurn = Turn.InBattle;
+    }
+
+    private void OnBattleFinished() {
+        currentTurn = lastTurn;
+        BattleFinished?.Invoke();
     }
 }

@@ -24,12 +24,15 @@ public class ElementSprite : MonoBehaviour {
                     case Key key:
                         SetSprite(key.elementType, key.needsElement);
                         break;
+                    case EnemyElement enemy:
+                        SetSprite(!Application.isPlaying ? enemy.startingElement : enemy.CurrentElement);
+                        break;
                 }
             }
         }
     }
 
-    private void SetSprite(ElementType elementType, bool needsElement) {
+    private void SetSprite(ElementType elementType, bool needsElement = true) {
         if (needsElement) {
             var spriteData = Utils.GetAllInstances<DataSpritesSO>();
             if (spriteData.Length > 0) {
