@@ -20,11 +20,9 @@ public class EnemyManager : MonoBehaviour {
 	}
 
 	public void Unsubscribe(EnemyElement enemyElement) {
-		Debug.Log("Uns");
 		enemies.Remove(enemyElement);
 		enemyElement.FinishedTurn -= OnEnemyFinishedTurn;
 		if (!AreThereEnemiesLeft() && TurnManager.Instance.CurrentTurn == Turn.EnemyTurn) {
-			Debug.Log("Finished");
 			FinishedEnemyTurn?.Invoke();
 		}
 	}

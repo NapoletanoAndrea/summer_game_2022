@@ -6,7 +6,7 @@ public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
     public ElementType startingElement;
     public ElementType currentElement;
     [SerializeField] private bool changeElement;
-    [SerializeField, ShowIf("changeElement")]
+    [SerializeField, ShowIf("changeElement"), ReadOnly]
     private int turnsToChangeElement;
     [ShowIf("changeElement")]
     public int turnCount;
