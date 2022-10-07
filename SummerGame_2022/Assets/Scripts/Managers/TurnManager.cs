@@ -9,7 +9,7 @@ public enum Turn {
 }
 
 public class TurnManager : MonoBehaviour {
-    [SerializeField] private PlayerElement playerElement;
+    public PlayerElement playerElement;
 
     [SerializeField] private Turn startTurn;
     [SerializeField, ReadOnly] private Turn currentTurn;

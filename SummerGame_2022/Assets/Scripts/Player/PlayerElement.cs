@@ -3,13 +3,13 @@ using UnityEngine;
 using Action = System.Action;
 
 public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
-    [SerializeField] private ElementType startingElement;
-    [SerializeField, ReadOnly] private ElementType currentElement;
+    public ElementType startingElement;
+    public ElementType currentElement;
     [SerializeField] private bool changeElement;
     [SerializeField, ShowIf("changeElement")]
     private int turnsToChangeElement;
-    [SerializeField, ShowIf("changeElement")]
-    private int turnCount;
+    [ShowIf("changeElement")]
+    public int turnCount;
 
     private PlayerController playerController;
 
