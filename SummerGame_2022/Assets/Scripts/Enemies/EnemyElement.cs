@@ -10,9 +10,11 @@ public class EnemyElement : MonoBehaviour
     [SerializeField] private bool changeElement;
     [SerializeField, ShowIf("changeElement")]
     private int turnsToChangeElement;
-
-    private EnemyBase enemyBase;
+    [SerializeField, ShowIf("changeElement")]
     private int turnCount;
+    [SerializeField] private int bestOf;
+    
+    private EnemyBase enemyBase;
 
     public ElementType CurrentElement => currentElement;
 
@@ -36,8 +38,9 @@ public class EnemyElement : MonoBehaviour
                 int elementNum = (int) currentElement;
                 elementNum++;
                 if (elementNum > 2) {
-                    currentElement = 0;
+                    elementNum = 0;
                 }
+                currentElement = (ElementType) elementNum;
                 turnCount = 0;
             }
         }

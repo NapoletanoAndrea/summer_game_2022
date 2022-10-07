@@ -33,11 +33,11 @@ public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
             if (turnCount >= turnsToChangeElement) {
                 int elementNum = (int) currentElement;
                 elementNum++;
-                currentElement = (ElementType) elementNum;
                 if (elementNum > 2) {
                     SendMove();
                     currentElement = 0;
                 }
+                currentElement = (ElementType) elementNum;
                 turnCount = 0;
             }
             TurnManager.Instance.turnsLeftForMoveExecution = turnsToChangeElement - turnCount;
