@@ -19,15 +19,18 @@ public class EnemyElement : MonoBehaviour, ITargeter, ITargetable
     [Min(1)] public int bestOf;
     
     private EnemyBase enemyBase;
+    private EnemyMoveSelector moveSelector;
     private int health;
 
     public ElementType CurrentElement => currentElement;
+    public EnemyMoveSelector MoveSelector => moveSelector;
 
     public event Action FinishedTurn;
 
     private void Awake() {
         currentElement = startingElement;
         enemyBase = GetComponent<EnemyBase>();
+        moveSelector = GetComponent<EnemyMoveSelector>();
         health = bestOf;
     }
 

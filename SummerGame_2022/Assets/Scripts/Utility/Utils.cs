@@ -11,4 +11,8 @@ public static class Utils {
 		}
 		return a;
 	}
+
+	public static int Repeat(int num, int minInclusive, int maxExclusive) {
+		return num >= maxExclusive ? minInclusive : num;
+	}
 }
