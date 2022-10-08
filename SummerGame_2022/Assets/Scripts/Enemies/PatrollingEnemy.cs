@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PatrollingEnemy : MovingEnemy {
-    public List<PatrolTile> patrolTiles;
+    public List<PatrolTile> patrolTiles = new();
     private PatrolTile lastTile;
 
     [Serializable]
