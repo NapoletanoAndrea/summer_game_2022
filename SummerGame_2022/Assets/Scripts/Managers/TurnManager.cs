@@ -90,8 +90,10 @@ public class TurnManager : MonoBehaviour {
     }
 
     private void OnBattleStarted() {
-        lastTurn = currentTurn;
-        currentTurn = Turn.InBattle;
+        if (currentTurn != Turn.InBattle) {
+            lastTurn = currentTurn;
+            currentTurn = Turn.InBattle;
+        }
     }
 
     private void OnBattleFinished() {
