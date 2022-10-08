@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7245853533950053539}
   - component: {fileID: 7245853533950053538}
   - component: {fileID: 7245853533950053537}
+  - component: {fileID: 6577922716020312049}
   - component: {fileID: 7245853533950053540}
   m_Layer: 0
   m_Name: Small Slime
@@ -126,6 +127,20 @@ MonoBehaviour:
   attackTurns: 0
   attackTurnCount: 0
   bestOf: 1
+--- !u!114 &6577922716020312049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7245853533950053551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49c48bdcdcaef7548bb0c5c6ca8f8b82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  combatSprite: {fileID: 21300000, guid: 8680cbf0007ca7f4d94dc407365512a2, type: 3}
+  moves: 00000000
 --- !u!58 &7245853533950053540
 CircleCollider2D:
   m_ObjectHideFlags: 0

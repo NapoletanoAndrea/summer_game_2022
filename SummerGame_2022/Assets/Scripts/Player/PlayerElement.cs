@@ -3,7 +3,6 @@ using UnityEngine;
 using Action = System.Action;
 
 public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
-    public ElementType startingElement;
     public ElementType currentElement;
     [SerializeField] private bool changeElement;
     [SerializeField, ShowIf("changeElement"), ReadOnly]
@@ -16,7 +15,6 @@ public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
     public event Action FinishedTurn;
 
     private void Awake() {
-        currentElement = startingElement;
         playerController = GetComponent<PlayerController>();
     }
 
@@ -32,7 +30,6 @@ public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
         if (changeElement) {
             turnCount++;
             if (turnCount >= turnsToChangeElement) {
-                SendMove();
                 int elementNum = (int) currentElement;
                 elementNum++;
                 if (elementNum > 2) {
@@ -40,6 +37,7 @@ public class PlayerElement : MonoBehaviour, ITargeter, ITargetable {
                 }
                 currentElement = (ElementType) elementNum;
                 turnCount = 0;
+                SendMove();
             }
             TurnManager.Instance.turnsLeftForMoveExecution = turnsToChangeElement - turnCount;
             FinishedTurn?.Invoke();

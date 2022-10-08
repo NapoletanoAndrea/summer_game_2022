@@ -42,7 +42,7 @@ public class MovesOrder : MonoBehaviour {
     }
 
     private int GetCurrentIndex(PlayerElement playerElement) {
-        int index = movesIndex[!Application.isPlaying ? playerElement.startingElement : playerElement.currentElement];
+        int index = movesIndex[playerElement.currentElement];
         index += playerElement.turnCount;
         if (index > 8) {
             index = 0;

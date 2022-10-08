@@ -12,6 +12,8 @@ public class BattleManager : MonoBehaviour {
 
     public int winsNeeded;
 
+    public EnemyMoveSelector enemyMoveSelector;
+
     public event Action BattleStarted;
     public event Action BattleFinished;
 
@@ -21,11 +23,15 @@ public class BattleManager : MonoBehaviour {
 
     public void StartBattle(EnemyElement enemy, ElementType playerElement, ElementType enemyElement) {
         winsNeeded = enemy.bestOf;
+        playerWins = 0;
+        enemyWins = 0;
+
         switch (playerElement.Compare(enemyElement)) {
             case -1:
                 enemyWins++;
                 if (enemyWins >= winsNeeded) {
                     SceneLoader.Instance.Reload();
+                    return;
                 }
                 break;
             case 1:
@@ -36,6 +42,8 @@ public class BattleManager : MonoBehaviour {
                 }
                 break;
         }
-        //BattleStarted?.Invoke();
+
+        enemyMoveSelector = enemy.MoveSelector;
+        BattleStarted?.Invoke();
     }
 }
