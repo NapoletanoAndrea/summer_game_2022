@@ -294,7 +294,7 @@ MonoBehaviour:
   attack: 0
   attackTurns: 0
   attackTurnCount: 0
-  bestOf: 3
+  bestOf: 2
 --- !u!114 &6577922716020312049
 MonoBehaviour:
   m_ObjectHideFlags: 0

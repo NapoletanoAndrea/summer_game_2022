@@ -277,7 +277,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2692168639652072794, guid: e7d2ef5a2750d6d44ab3682aa17da792, type: 3}
       propertyPath: slow
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2692168639652072794, guid: e7d2ef5a2750d6d44ab3682aa17da792, type: 3}
       propertyPath: patrolTiles.Array.size
@@ -1371,7 +1371,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2692168639652072794, guid: e7d2ef5a2750d6d44ab3682aa17da792, type: 3}
       propertyPath: slow
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2692168639652072794, guid: e7d2ef5a2750d6d44ab3682aa17da792, type: 3}
       propertyPath: patrolTiles.Array.size
@@ -6582,7 +6582,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6761653983181311531, guid: 67557b19d895a8b4da7d44c1a15d2fdc, type: 3}
       propertyPath: currentLevel
-      value: 5
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8721624523915505485, guid: 67557b19d895a8b4da7d44c1a15d2fdc, type: 3}
       propertyPath: m_Name
