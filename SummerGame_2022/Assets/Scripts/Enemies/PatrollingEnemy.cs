@@ -16,8 +16,8 @@ public class PatrollingEnemy : MovingEnemy {
             if (index < 0) {
                 index = this.index;
             }
-            var cellSize = GridManager.Instance.grid.cellSize;
-            var result = Physics2D.OverlapBox(adjacentTiles[index], cellSize, 0, GridManager.Instance.obstacleMask);
+            var radius = GridManager.Instance.grid.cellSize.x / 2 - .1f;
+            var result = Physics2D.OverlapCircle(adjacentTiles[index], radius, 0, GridManager.Instance.obstacleMask);
             return result == null;
         }
 
