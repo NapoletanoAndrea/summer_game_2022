@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5026039134171266614}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.3, y: 0.3, z: 0}
+  m_LocalPosition: {x: -0.35, y: 0.35, z: 0}
   m_LocalScale: {x: 0.15, y: 0.15, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -94,12 +94,12 @@ GameObject:
   m_Component:
   - component: {fileID: 7245853533950053536}
   - component: {fileID: 7245853533950053539}
-  - component: {fileID: 589537369551921443}
+  - component: {fileID: 2692168639652072794}
   - component: {fileID: 7245853533950053537}
   - component: {fileID: 6577922716020312049}
   - component: {fileID: 7245853533950053540}
   m_Layer: 0
-  m_Name: Small Slime
+  m_Name: Medium Slime
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -163,7 +163,7 @@ SpriteRenderer:
   m_SortingLayerID: 599963103
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 406b3ee50a2e31f4ba60436c52730ab3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 81365701ec214274cbe925c0d1943213, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -174,7 +174,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &589537369551921443
+--- !u!114 &2692168639652072794
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -186,8 +186,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18c460441a848ad4c96c51ef39ed14b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSeconds: 0
-  slow: 0
+  moveSeconds: 0.15
+  slow: 1
   patrolTiles: []
 --- !u!114 &7245853533950053537
 MonoBehaviour:
@@ -222,7 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49c48bdcdcaef7548bb0c5c6ca8f8b82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combatSprite: {fileID: 21300000, guid: 8680cbf0007ca7f4d94dc407365512a2, type: 3}
+  combatSprite: {fileID: 21300000, guid: bee77af0d44f9c74098d10a86dec06da, type: 3}
   moves: 00000000
 --- !u!58 &7245853533950053540
 CircleCollider2D:
@@ -266,7 +266,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7245853534172791436}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.15, y: 0.25, z: 0}
+  m_LocalPosition: {x: 0.2, y: 0.3, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

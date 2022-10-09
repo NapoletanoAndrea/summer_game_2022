@@ -176,7 +176,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 687517823000509878, guid: 97b681936c928df48a19a1fdbb30537c, type: 3}
       propertyPath: currentElement
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7899302725658670059, guid: 97b681936c928df48a19a1fdbb30537c, type: 3}
       propertyPath: m_Name
@@ -1541,11 +1541,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Every third step you jank!
+  m_text: 'Every third step you ''jank''!
 
 
-    Use the same move seen in the door to
-    open it.'
+    Use the same move seen in the door
+    as a key to open it.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2c11f80f3ccaf9445a06d77c3f32642c, type: 2}
   m_sharedMaterial: {fileID: 7479409377672854122, guid: 2c11f80f3ccaf9445a06d77c3f32642c, type: 2}
@@ -6071,11 +6071,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3630978026588203659, guid: 91f33f22ab514094c8836f36b0a2005e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.75
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 3630978026588203659, guid: 91f33f22ab514094c8836f36b0a2005e, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.75
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 3630978026588203659, guid: 91f33f22ab514094c8836f36b0a2005e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6195,11 +6195,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6058465653255434840, guid: 91f33f22ab514094c8836f36b0a2005e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.25
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 6058465653255434840, guid: 91f33f22ab514094c8836f36b0a2005e, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.25
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 6058465653255434840, guid: 91f33f22ab514094c8836f36b0a2005e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6264,7 +6264,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 423670857171094484, guid: 34150f1d6fbed9e47b0a5be9e2122295, type: 3}
       propertyPath: elementType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4069299610364465934, guid: 34150f1d6fbed9e47b0a5be9e2122295, type: 3}
       propertyPath: m_LocalScale.x
@@ -6285,7 +6285,7 @@ PrefabInstance:
     - target: {fileID: 7453141953756914201, guid: 34150f1d6fbed9e47b0a5be9e2122295, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: e50785215ba54cb408fcb24af0892347, type: 3}
+      objectReference: {fileID: 21300000, guid: 069f8b4ff9a07f042b45a0b6aaf6828e, type: 3}
     - target: {fileID: 8756934041632849579, guid: 34150f1d6fbed9e47b0a5be9e2122295, type: 3}
       propertyPath: m_RootOrder
       value: 0
