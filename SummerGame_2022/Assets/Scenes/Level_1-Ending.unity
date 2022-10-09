@@ -5628,9 +5628,17 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Congratulazioni!\n\nGrazie per aver giocato a questa demo.\n\nAl gioco
-    mancano ancora un paio di features, ma ben presto arriveranno.\n\n(Non c'\xE8
-    pi\xF9 nulla da vedere, ciao ciao)"
+  m_text: 'CONGRATULATIONS!
+
+
+    Thanks for playing this demo.
+
+    We miss some
+    more features, but soon it will be complete.
+
+
+    (nothing more to see here,
+    xoxo)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2c11f80f3ccaf9445a06d77c3f32642c, type: 2}
   m_sharedMaterial: {fileID: 7479409377672854122, guid: 2c11f80f3ccaf9445a06d77c3f32642c, type: 2}
