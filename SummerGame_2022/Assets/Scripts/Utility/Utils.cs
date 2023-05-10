@@ -2,6 +2,9 @@ using UnityEditor;
 using UnityEngine;
 
 public static class Utils {
+	
+	#if UNITY_EDITOR
+	
 	public static T[] GetAllInstances<T>() where T : ScriptableObject {
 		string[] guids = AssetDatabase.FindAssets("t:" + typeof(T).Name);
 		var a = new T[guids.Length];
@@ -11,6 +14,8 @@ public static class Utils {
 		}
 		return a;
 	}
+	
+	#endif
 
 	public static int Repeat(int num, int minInclusive, int maxExclusive) {
 		return num >= maxExclusive ? minInclusive : num;

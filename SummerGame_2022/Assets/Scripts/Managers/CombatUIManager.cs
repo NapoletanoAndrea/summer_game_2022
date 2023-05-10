@@ -1,11 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Rewired;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.GameCenter;
 using Random = UnityEngine.Random;
 
 public class CombatUIManager : MonoBehaviour {
@@ -76,7 +73,6 @@ public class CombatUIManager : MonoBehaviour {
         Vector2 center = fightBar.transform.localPosition;
         float scale = fightBar.size.x / 2 * fightBar.transform.localScale.x;
         barLimit = new Vector2(center.x - scale, center.x + scale);
-        Debug.Log(barLimit);
 
         List<Vector2> excludedLimits = new();
         foreach (var elementSprite in elementSprites) {

@@ -17,15 +17,9 @@ public class SceneLoader : MonoBehaviour {
     private int buildIndex;
     private bool firstScene = true;
 
-    private void Awake() {
-        if (!Instance) {
-            Instance = this;
-            transform.parent = null;
-            DontDestroyOnLoad(this);
-        }
-        else {
-            Destroy(this);
-        }
+    private void Awake()
+    {
+        Instance = this;
     }
 
     private void OnEnable() {
@@ -97,5 +91,10 @@ public class SceneLoader : MonoBehaviour {
         if (changeScene) {
             SceneManager.LoadScene(buildIndex);
         }
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 }
